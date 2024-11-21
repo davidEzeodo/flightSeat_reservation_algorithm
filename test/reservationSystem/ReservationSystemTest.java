@@ -95,11 +95,10 @@ class ReservationSystemTest {
     }
     @Test
     void testThat_userCanBeAssigned_economyClassSeats(){
+        assertFalse(flight.getFlightSeats()[5]);
         boolean[] result = flight.assignEconomyClassSeats();
-        for(int i = 5; i < result.length; i++){
-            assertTrue(result[i]);
-        }
         System.out.println(Arrays.toString(result));
+        assertTrue(flight.getFlightSeats()[5]);
     }
     private void assignSeatsForFlight(int typeInput, int seatIndex){
         assertFalse(flight.getFlightSeats()[seatIndex]);

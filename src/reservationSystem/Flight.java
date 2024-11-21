@@ -12,7 +12,7 @@ public class Flight {
                 boolean[] seatsUpdated = assignFirstClassSeats();
                 System.out.println(Arrays.toString(seatsUpdated));
                 return seatsUpdated;
-            }
+            } else return assignEconomyClassSeats();
         }
         throw new IllegalArgumentException();
     }
@@ -26,12 +26,15 @@ public class Flight {
         }throw new RuntimeException("There are no seats available in first class, would you mind being moved to economy?");
     }
     public boolean[] assignEconomyClassSeats(){
-        boolean[] seats = getFlightSeats();
         for(int i = 5; i < flightSeats.length; i++){
-            seats[i] = true;
+            if(!flightSeats[i]){
+                flightSeats[i] = true;
+                setFlightSeats(flightSeats);
+                return flightSeats;
+            }
+
         }
-        return flightSeats;
-//        throw new RuntimeException("Next flight leaves in 3 hours.");
+        throw new RuntimeException("Next flight leaves in 3 hours."); //This is wrong.
     }
     public int[] findSeatsTaken(){
         int[] seatsTaken = new int[flightSeats.length];
