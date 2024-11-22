@@ -34,31 +34,40 @@ class ReservationSystemTest {
         int userInput = 1;
         System.out.println(flight.getFlightSeats()[0]);
         assertFalse(flight.getFlightSeats()[0]);
+        try{
+            flight.assignSeat(userInput);
+        }catch(NoSeatsAvailableException exMsg){
+            exMsg.getCause();
+        }
 
-        flight.assignSeat(userInput);
         boolean seatStatus = flight.getFlightSeats()[0];
         System.out.println(seatStatus);
         assertTrue(seatStatus);
     }
     @Test
     void testThat_seatCannot_beReassigned(){
-        int userInput = 1;
         assertFalse(flight.getFlightSeats()[0]);
-        boolean[] flightUpdated = flight.assignSeat(userInput);
+        try{
+            flight.assignSeat(1);
+        }catch(NoSeatsAvailableException exMsg){
+            exMsg.getCause();
+        }
 
         int[] seatsTaken = flight.findSeatsTaken();
-        assertTrue(flightUpdated[0]);
-        System.out.println(Arrays.toString(flightUpdated));
+        assertTrue(flight.getFlightSeats()[0]);
+        System.out.println(Arrays.toString(flight.getFlightSeats()));
 
         System.out.println(Arrays.toString(seatsTaken));
         assertArrayEquals(new int[]{1, 0, 0, 0, 0, 0, 0, 0, 0, 0}, seatsTaken);
 
-        assertFalse(flightUpdated[1]);
-        int newUserInput = 1;
-
-        boolean[] flightUpdated2 = flight.assignSeat(newUserInput);
-        assertTrue(flightUpdated2[1]);
-        System.out.println(Arrays.toString(flightUpdated2));
+        assertFalse(flight.getFlightSeats()[1]);
+        try{
+            flight.assignSeat(1);
+        }catch(NoSeatsAvailableException exMsg){
+            exMsg.getCause();
+        }
+        assertTrue(flight.getFlightSeats()[1]);
+        System.out.println(Arrays.toString(flight.getFlightSeats()));
 
         int[] seatStatus =  flight.findSeatsTaken();
         System.out.println(Arrays.toString(seatStatus));
@@ -75,36 +84,78 @@ class ReservationSystemTest {
     }
     @Test
     void testThat_firstClassRow_has_5_trueValues_when5SeatsAreAssigned(){
-        assignSeatsForFlight(1, 0);
-        assignSeatsForFlight(1, 1);
-        assignSeatsForFlight(1, 2);
-        assignSeatsForFlight(1, 3);
-        assignSeatsForFlight(1, 4);
+        assertFalse(flight.getFlightSeats()[0]);
+        assignSeatsForFlight(1);
+        assertTrue(flight.getFlightSeats()[0]);
+
+        assertFalse(flight.getFlightSeats()[1]);
+        assignSeatsForFlight(1);
+        assertTrue(flight.getFlightSeats()[1]);
+
+        assertFalse(flight.getFlightSeats()[2]);
+        assignSeatsForFlight(1);
+        assertTrue(flight.getFlightSeats()[2]);
+
+        assertFalse(flight.getFlightSeats()[3]);
+        assignSeatsForFlight(1);
+        assertTrue(flight.getFlightSeats()[3]);
+
+        assertFalse(flight.getFlightSeats()[4]);
+        assignSeatsForFlight(1);
+        assertTrue(flight.getFlightSeats()[4]);
     }
     @Test
     void testThat_exceptionIsThrown_whenFirstClassIsFilled(){
-        assignSeatsForFlight(1, 0);
-        assignSeatsForFlight(1, 1);
-        assignSeatsForFlight(1, 2);
-        assignSeatsForFlight(1, 3);
-        assignSeatsForFlight(1, 4);
+        assertFalse(flight.getFlightSeats()[0]);
+        assignSeatsForFlight(1);
+        assertTrue(flight.getFlightSeats()[0]);
+
+        assertFalse(flight.getFlightSeats()[1]);
+        assignSeatsForFlight(1);
+        assertTrue(flight.getFlightSeats()[1]);
+
+        assertFalse(flight.getFlightSeats()[2]);
+        assignSeatsForFlight(1);
+        assertTrue(flight.getFlightSeats()[2]);
+
+        assertFalse(flight.getFlightSeats()[3]);
+        assignSeatsForFlight(1);
+        assertTrue(flight.getFlightSeats()[3]);
+
+        assertFalse(flight.getFlightSeats()[4]);
+        assignSeatsForFlight(1);
+        assertTrue(flight.getFlightSeats()[4]);
         RuntimeException message = assertThrows(RuntimeException.class, () ->{
-            assignSeatsForFlight(1, 5);
+            assignSeatsForFlight(5);
         }, "There are no seats available in first class, would you mind being moved to economy?");
         System.out.println(message.toString());
     }
     @Test
     void testThat_userCanBeAssigned_economyClassSeats(){
         assertFalse(flight.getFlightSeats()[5]);
-        boolean[] result = flight.assignEconomyClassSeats();
+        boolean[] result = null;
+        try{
+            result = flight.assignSeat(2);
+        }catch(NoSeatsAvailableException exMsg){
+             exMsg.getCause();
+        }
+
         System.out.println(Arrays.toString(result));
         assertTrue(flight.getFlightSeats()[5]);
     }
-    private void assignSeatsForFlight(int typeInput, int seatIndex){
-        assertFalse(flight.getFlightSeats()[seatIndex]);
-        boolean[] seatsUpdated = flight.assignSeat(typeInput);
+    @Test
+    void testThat_exceptionIsThrown_onceAllSeatsAreAssigned(){
+        assertFalse(flight.getFlightSeats()[0]);
+
+        assignSeatsForFlight(1);
+    }
+    private void assignSeatsForFlight(int typeInput){
+        try{
+            flight.assignSeat(1);
+        }catch(NoSeatsAvailableException exMsg){
+            exMsg.getCause();
+        }
         System.out.println(Arrays.toString(flight.findSeatsTaken()));
-        assertTrue(seatsUpdated[seatIndex]);
     }
     private void showSeats(){
         boolean[] seats = flight.getFlightSeats();

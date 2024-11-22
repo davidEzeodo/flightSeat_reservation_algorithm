@@ -6,7 +6,7 @@ public class Flight {
     public boolean[] getFlightSeats() {
         return flightSeats;
     }
-    public boolean[] assignSeat(int userInput){
+    public boolean[] assignSeat(int userInput) throws NoSeatsAvailableException {
         if(userInput == 1 || userInput == 2){
             if(userInput==1) {
                 boolean[] seatsUpdated = assignFirstClassSeats();
@@ -14,7 +14,7 @@ public class Flight {
                 return seatsUpdated;
             } else return assignEconomyClassSeats();
         }
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException("Wrong input");
     }
     private boolean[] assignFirstClassSeats(){
         for (int i = 0; i < flightSeats.length/2; i++) {
@@ -25,16 +25,15 @@ public class Flight {
             }
         }throw new RuntimeException("There are no seats available in first class, would you mind being moved to economy?");
     }
-    public boolean[] assignEconomyClassSeats(){
+    private boolean[] assignEconomyClassSeats() throws NoSeatsAvailableException {
         for(int i = 5; i < flightSeats.length; i++){
             if(!flightSeats[i]){
                 flightSeats[i] = true;
                 setFlightSeats(flightSeats);
                 return flightSeats;
             }
-
         }
-        throw new RuntimeException("Next flight leaves in 3 hours."); //This is wrong.
+        throw new NoSeatsAvailableException("Next flight leaves in 3 hours."); //This is wrong.
     }
     public int[] findSeatsTaken(){
         int[] seatsTaken = new int[flightSeats.length];
