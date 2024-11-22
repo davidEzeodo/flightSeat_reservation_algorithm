@@ -6,7 +6,7 @@ public class Flight {
     public boolean[] getFlightSeats() {
         return flightSeats;
     }
-    public boolean[] assignSeat(int userInput) throws NoSeatsAvailableException {
+    public boolean[] assignSeat(int userInput) {
         if(userInput == 1 || userInput == 2){
             if(userInput==1) {
                 boolean[] seatsUpdated = assignFirstClassSeats();
@@ -14,7 +14,7 @@ public class Flight {
                 return seatsUpdated;
             } else return assignEconomyClassSeats();
         }
-        throw new IllegalArgumentException("Wrong input");
+        throw new InvalidInputException("Wrong input");
     }
     private boolean[] assignFirstClassSeats(){
         for (int i = 0; i < flightSeats.length/2; i++) {
@@ -23,11 +23,12 @@ public class Flight {
                 this.setFlightSeats(flightSeats);
                 return this.getFlightSeats();
             }
-        }throw new RuntimeException("There are no seats available in first class, would you mind being moved to economy?");
+        }throw new UnavailableFirstClassSeats();
     }
-    private boolean[] assignEconomyClassSeats() throws NoSeatsAvailableException {
+    private boolean[] assignEconomyClassSeats(){
         for(int i = 5; i < flightSeats.length; i++){
-            if(!flightSeats[i]){
+            if(!flightSeats[i] ){
+
                 flightSeats[i] = true;
                 setFlightSeats(flightSeats);
                 return flightSeats;

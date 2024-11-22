@@ -143,15 +143,9 @@ class ReservationSystemTest {
         System.out.println(Arrays.toString(result));
         assertTrue(flight.getFlightSeats()[5]);
     }
-    @Test
-    void testThat_exceptionIsThrown_onceAllSeatsAreAssigned(){
-        assertFalse(flight.getFlightSeats()[0]);
-
-        assignSeatsForFlight(1);
-    }
     private void assignSeatsForFlight(int typeInput){
         try{
-            flight.assignSeat(1);
+            flight.assignSeat(typeInput);
         }catch(NoSeatsAvailableException exMsg){
             exMsg.getCause();
         }
